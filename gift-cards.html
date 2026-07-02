@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>כרטיסי מתנה · דיגיטל שופ digitalShop</title>
+  <meta name="description" content="המתנה המושלמת — שהם יבחרו בעצמם.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/png" href="img/favicon.png">
+  <link rel="apple-touch-icon" href="img/favicon.png">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+  <header class="header">
+    <div class="topbar"></div>
+    <div class="container header__row">
+      <a href="index.html" class="logo"><img src="img/logo.png" alt="Digital Shop"></a>
+      <label class="search">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+        <input type="search" placeholder="חיפוש מוצרים, מותגים וקטגוריות…">
+      </label>
+      <div class="header__actions">
+        <a class="icon-btn" href="login.html" aria-label="התחברות"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg></a>
+        <a class="icon-btn" href="wishlist.html" aria-label="מועדפים"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></a>
+        <a class="icon-btn" href="cart.html" aria-label="עגלה"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="20" r="1.6"/><circle cx="18" cy="20" r="1.6"/><path d="M2 3h2.2l2 12.5a1.5 1.5 0 0 0 1.5 1.2h9.6a1.5 1.5 0 0 0 1.5-1.2L20.5 7H6"/></svg><span class="badge">0</span></a>
+        <button class="icon-btn menu-toggle" data-menu-open aria-label="תפריט"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M3 6h18M3 12h18M3 18h18"/></svg></button>
+      </div>
+    </div>
+    <nav class="nav">
+      <div class="container nav__row">
+        <a href="category.html" class="nav__all is-active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>כל הקטגוריות</a>
+        <a href="category.html?cat=טלפונים וטאבלטים">📱 טלפונים וטאבלטים</a>
+        <a href="category.html?cat=אוזניות">🎧 אוזניות</a>
+        <a href="category.html?cat=רמקולים">🔊 רמקולים</a>
+        <a href="category.html?cat=מחשבים ומסכים">💻 מחשבים ומסכים</a>
+        <a href="category.html?cat=גיימינג">🎮 גיימינג</a>
+        <a href="category.html?cat=אביזרים">🔌 אביזרים</a>
+        <a href="category.html?cat=מדפסות">🖨️ מדפסות</a>
+        <a href="category.html?cat=רשת ותקשורת">📡 רשת ותקשורת</a>
+      </div>
+    </nav>
+  </header>
+
+  <div class="page-head">
+    <div class="container">
+      <div class="crumbs" style="padding-bottom:8px"><a href="index.html">בית</a><span class="sep">/</span><span class="cur">כרטיסי מתנה</span></div>
+      <h1>כרטיסי מתנה</h1>
+      <p>כרטיס מתנה דיגיטלי של דיגיטל שופ, נשלח ישירות למייל.</p>
+    </div>
+  </div>
+
+  <main class="section section--tight">
+    <div class="container">
+
+      <div class="content">
+        <p>לא בטוחים מה לקנות? תנו להם לבחור. כרטיס המתנה הדיגיטלי שלנו נשלח ישירות לאימייל של מקבל המתנה, וניתן למימוש על כל המוצרים באתר.</p>
+        <h2>בחרו סכום</h2>
+        <div class="gift-amounts">
+          <button>₪100</button><button class="is-active">₪250</button><button>₪500</button><button>₪1,000</button>
+        </div>
+        <form class="form" onsubmit="event.preventDefault(); this.reset(); alert('כרטיס המתנה נוסף לעגלה! (הדגמה)');">
+          <div class="field"><label>שם המקבל</label><input type="text" required placeholder="למי הכרטיס?"></div>
+          <div class="field"><label>אימייל המקבל</label><input type="email" required placeholder="name@email.com"></div>
+          <div class="field"><label>ברכה אישית (אופציונלי)</label><textarea placeholder="כמה מילים מהלב…"></textarea></div>
+          <button class="btn btn--primary btn--lg" type="submit">הוספה לעגלה</button>
+        </form>
+      </div>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer__grid">
+        <div class="footer__about">
+          <a href="index.html" class="logo"><img src="img/logo.png" alt="Digital Shop"></a>
+          <p>חנות האלקטרוניקה והגאדג'טים שלכם — מוצרים מקוריים עם אחריות יבואן, במחירים הוגנים ושירות אישי מהערבה לכל הארץ.</p>
+          <div class="footer__contact">
+            <a href="tel:0524260033">📞 052-426-0033 · 052-426-0556</a>
+            <a href="mailto:dana@digital-shop.co.il">✉️ dana@digital-shop.co.il</a>
+            <a href="mailto:shlomi@digital-shop.co.il">✉️ shlomi@digital-shop.co.il</a>
+            <a href="#">📍 מושב עין יהב, הערבה</a>
+          </div>
+        </div>
+        <div><h4>קנייה</h4><ul class="footer__links"><li><a href="category.html">כל המוצרים</a></li><li><a href="deals.html">מבצעים חמים</a></li><li><a href="new.html">חדש בחנות</a></li><li><a href="brands.html">המותגים שלנו</a></li></ul></div>
+        <div><h4>שירות לקוחות</h4><ul class="footer__links"><li><a href="contact.html">צור קשר</a></li><li><a href="order-tracking.html">מעקב הזמנה</a></li><li><a href="shipping.html">משלוחים והחזרות</a></li><li><a href="faq.html">שאלות נפוצות</a></li></ul></div>
+        <div><h4>מידע</h4><ul class="footer__links"><li><a href="about.html">אודות</a></li><li><a href="terms.html">תקנון</a></li><li><a href="privacy.html">מדיניות פרטיות</a></li><li><a href="accessibility.html">נגישות</a></li></ul></div>
+      </div>
+      <div class="footer__bottom">
+        <span>© 2026 כל הזכויות שמורות ל Digital Shop</span>
+        <div class="footer__pay"><span>VISA</span><span>MasterCard</span><span>PayPal</span><span>Bit</span></div>
+      </div>
+      <div class="footer__credit">
+        <span>עוצב על ידי</span>
+        <a href="https://ombee.co.il" target="_blank" rel="noopener" aria-label="OMBee — עיצוב גרפי ו-UI/UX">
+          <img src="img/ombee-logo.png" alt="OMBee — Graphic Design And UI/UX">
+        </a>
+      </div>
+    </div>
+  </footer>
+
+  
+
+  <script src="js/products-data.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/accessibility.js"></script>
+  <script src="js/cookies.js"></script>
+</body>
+</html>
