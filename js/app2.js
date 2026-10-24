@@ -185,7 +185,7 @@ if (drawer) {
   const svg = s => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${s}</svg>`;
   drawer.innerHTML = `
     <div class="drawer__head">
-      <a href="index.html" class="logo"><img src="img/logo.png" alt="Digital Shop"></a>
+      <a href="index.html" class="logo"><img src="img/logo-Digital-shop.webp" alt="Digital Shop"></a>
       <button class="icon-btn" data-menu-close aria-label="סגירה">${svg('<path d="M18 6 6 18M6 6l12 12"/>')}</button>
     </div>
     <div class="drawer__scroll">
