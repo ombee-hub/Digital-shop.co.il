@@ -74,7 +74,6 @@
       <a href="accessibility.html">הצהרת נגישות</a>
       <a href="privacy.html">מדיניות פרטיות</a>
     </div>
-    <p class="a11y-note">האתר עומד בתקן הנגישות הישראלי (ת"י 5568) ברמה AA.</p>
   `;
   document.body.appendChild(panel);
 
