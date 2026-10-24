@@ -3,6 +3,10 @@
    Self-contained: shows once until a choice is saved.
    ========================================================= */
 (function () {
+  // Show only on the home page
+  var page = location.pathname.split("/").pop().toLowerCase();
+  if (page !== "" && page !== "index.html") return;
+
   var KEY = "ds_cookie_consent";
   try { if (localStorage.getItem(KEY)) return; } catch (e) {}
 
@@ -11,7 +15,6 @@
   bar.setAttribute("role", "dialog");
   bar.setAttribute("aria-label", "הודעת עוגיות");
   bar.innerHTML =
-    '<h3>🍪 אנחנו משתמשים בעוגיות</h3>' +
     '<p>אתר זה משתמש בעוגיות (Cookies) כדי לשפר את חוויית הגלישה שלך. ' +
     'לפרטים נוספים ניתן לעיין ב<a href="privacy.html">מדיניות הפרטיות</a>.</p>' +
     '<div class="cookie-actions">' +

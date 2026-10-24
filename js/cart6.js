@@ -55,6 +55,7 @@
     const d = detailed();
 
     if (d.length === 0) {
+      itemsEl.innerHTML = "";
       if (layout) layout.style.display = "none";
       if (empty) empty.hidden = false;
       if (subtitle) subtitle.textContent = "אין מוצרים בעגלה";
@@ -76,11 +77,12 @@
           <h3>${p.title}</h3>
         </div>
         <div class="cart-row__end">
+          <button type="button" class="cart-row__del" data-remove aria-label="הסר מהעגלה">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M8 6V4h8v2M6 6l1 14h10l1-14M10 11v6M14 11v6"/></svg>
+          </button>
           <div class="price"><b>${nis(p.price * qty)}</b>${old ? `<s>${nis(old * qty)}</s>` : ""}</div>
           <div class="qty">
-            <button type="button" class="qty__trash" data-remove aria-label="הסר מהעגלה">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M8 6V4h8v2M6 6l1 14h10l1-14M10 11v6M14 11v6"/></svg>
-            </button>
+            <button type="button" data-dec aria-label="הפחת">−</button>
             <input type="text" value="${qty}" inputmode="numeric" aria-label="כמות" data-qty readonly>
             <button type="button" data-inc aria-label="הוסף">+</button>
           </div>
@@ -110,9 +112,8 @@
         removeRow(rowEl, id);
       } else if (e.target.closest("[data-inc]")) { setQty(id, curQty(id) + 1); renderCartPage(); }
       else if (e.target.closest("[data-dec]")) {
-        // minus at quantity 1 removes the item from the cart
-        if (curQty(id) <= 1) { removeRow(rowEl, id); }
-        else { setQty(id, curQty(id) - 1); renderCartPage(); }
+        // minus lowers to minimum 1; the red trash removes the item
+        setQty(id, Math.max(1, curQty(id) - 1)); renderCartPage();
       }
     });
     document.addEventListener("change", function (e) {
