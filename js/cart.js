@@ -73,16 +73,16 @@
         <div class="cart-row__info">
           <span class="card__cat">${p.cat}</span>
           <h3>${p.title}</h3>
-          <button type="button" class="rm" data-remove>
+          <button type="button" class="rm" onclick="dsCartRemove('${p.id}')">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M8 6V4h8v2M6 6l1 14h10l1-14"/></svg> הסרה
           </button>
         </div>
         <div class="cart-row__end">
           <div class="price"><b>${nis(p.price * qty)}</b>${old ? `<s>${nis(old * qty)}</s>` : ""}</div>
           <div class="qty">
-            <button type="button" data-dec aria-label="הפחת">−</button>
-            <input type="text" value="${qty}" inputmode="numeric" aria-label="כמות">
-            <button type="button" data-inc aria-label="הוסף">+</button>
+            <button type="button" onclick="dsCartDec('${p.id}')" aria-label="הפחת">−</button>
+            <input type="text" value="${qty}" inputmode="numeric" aria-label="כמות" onchange="dsCartSet(this,'${p.id}')">
+            <button type="button" onclick="dsCartInc('${p.id}')" aria-label="הוסף">+</button>
           </div>
         </div>
       </div>`;
@@ -91,33 +91,17 @@
     updateSummary();
   }
 
-  /* Robust, once-bound delegation on the document — survives re-render,
-     re-parenting (a11y wrap) and any element.onclick quirks. */
-  let eventsBound = false;
-  function bindCartEvents() {
-    if (eventsBound) return;
-    eventsBound = true;
-    const curQty = id => { const it = read().find(x => String(x.id) === String(id)); return it ? it.qty : 1; };
-    document.addEventListener("click", e => {
-      const rm = e.target.closest("#cartItems [data-remove]");
-      if (rm) {
-        e.preventDefault();
-        const row = rm.closest(".cart-row"); const id = row.dataset.id;
-        row.style.transition = "opacity .2s, transform .2s";
-        row.style.opacity = "0"; row.style.transform = "translateX(-12px)";
-        setTimeout(() => { remove(id); renderCartPage(); }, 200);
-        return;
-      }
-      const inc = e.target.closest("#cartItems [data-inc]");
-      if (inc) { const id = inc.closest(".cart-row").dataset.id; setQty(id, curQty(id) + 1); renderCartPage(); return; }
-      const dec = e.target.closest("#cartItems [data-dec]");
-      if (dec) { const id = dec.closest(".cart-row").dataset.id; setQty(id, curQty(id) - 1); renderCartPage(); return; }
-    });
-    document.addEventListener("change", e => {
-      const inp = e.target.closest("#cartItems .qty input");
-      if (inp) { const id = inp.closest(".cart-row").dataset.id; setQty(id, parseInt(inp.value, 10) || 1); renderCartPage(); }
-    });
-  }
+  /* Global handlers used by inline onclick in the cart rows —
+     the most robust approach: no event binding, works in every browser. */
+  const curQty = id => { const it = read().find(x => String(x.id) === String(id)); return it ? it.qty : 1; };
+  window.dsCartRemove = function (id) {
+    const row = document.querySelector('#cartItems .cart-row[data-id="' + id + '"]');
+    if (row) { row.style.transition = "opacity .2s, transform .2s"; row.style.opacity = "0"; row.style.transform = "translateX(-12px)"; }
+    setTimeout(function () { remove(id); renderCartPage(); }, 200);
+  };
+  window.dsCartInc = function (id) { setQty(id, curQty(id) + 1); renderCartPage(); };
+  window.dsCartDec = function (id) { setQty(id, curQty(id) - 1); renderCartPage(); };
+  window.dsCartSet = function (inp, id) { setQty(id, parseInt(inp.value, 10) || 1); renderCartPage(); };
 
   function updateSummary() {
     const t = totals();
@@ -179,6 +163,6 @@
 
   /* run (scripts are at end of body, DOM is ready) */
   updateBadges();
-  if (document.getElementById("cartItems")) { bindCartEvents(); renderCartPage(); }
+  renderCartPage();
   initCheckout();
 })();
