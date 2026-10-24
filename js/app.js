@@ -44,10 +44,10 @@ function cardHTML(p) {
     <button class="card__fav" aria-label="הוסף למועדפים">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
     </button>
-    <a href="product.html" class="card__media">${media}</a>
+    <a href="product.html?id=${p.id}" class="card__media">${media}</a>
     <div class="card__body">
       <span class="card__cat">${p.cat}</span>
-      <h3 class="card__title"><a href="product.html">${p.title}</a></h3>
+      <h3 class="card__title"><a href="product.html?id=${p.id}">${p.title}</a></h3>
       <div class="card__rating"><span class="stars">${stars(rating)}</span> ${rating.toFixed(1)} <span style="color:var(--ink-faint)">(${reviews})</span></div>
       <div class="card__foot">
         <div class="price"><b>${NIS(p.price)}</b>${p.old ? `<s>${NIS(p.old)}</s>` : ""}</div>
@@ -151,27 +151,17 @@ const CAT_EMOJI = {
   show(1, false);
 })();
 
-/* ---- Cart badge helper (cart starts empty) ---- */
-const cartBadgeEl = document.querySelector('a[href="cart.html"] .badge');
-let cartCount = cartBadgeEl ? (parseInt(cartBadgeEl.textContent, 10) || 0) : 0;
-function setCartBadge(n) {
-  cartCount = n;
-  if (!cartBadgeEl) return;
-  cartBadgeEl.textContent = n;
-  cartBadgeEl.style.display = n > 0 ? "" : "none";
-}
-setCartBadge(cartCount); // hide the badge when the cart is empty
-
-/* ---- Add-to-cart feedback ---- */
+/* ---- Add-to-cart (cards) — adds to the real cart + feedback ---- */
 document.addEventListener("click", e => {
   const add = e.target.closest("[data-add]");
   if (add) {
-    setCartBadge(cartCount + 1);
+    if (window.Cart) window.Cart.add(add.dataset.add, 1);
+    const original = add.innerHTML;
     add.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6 9 17l-5-5"/></svg>';
     add.style.background = "var(--green)";
     add.style.color = "#fff";
     setTimeout(() => {
-      add.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>';
+      add.innerHTML = original;
       add.style.background = ""; add.style.color = "";
     }, 1100);
   }
@@ -285,8 +275,9 @@ document.querySelectorAll(".swatches").forEach(group => {
   });
 });
 
-/* ---- Quantity steppers ---- */
+/* ---- Quantity steppers (skip the cart page — cart.js owns those) ---- */
 document.querySelectorAll(".qty").forEach(q => {
+  if (q.closest("#cartItems")) return;
   const input = q.querySelector("input");
   q.querySelector("[data-inc]")?.addEventListener("click", () => { input.value = +input.value + 1; });
   q.querySelector("[data-dec]")?.addEventListener("click", () => { input.value = Math.max(1, +input.value - 1); });
@@ -297,81 +288,61 @@ document.querySelector("[data-filters-toggle]")?.addEventListener("click", () =>
   document.querySelector(".filters")?.classList.toggle("open");
 });
 
-/* ---- Cart page: live totals + empty state ---- */
-(function initCart() {
-  const itemsEl = document.getElementById("cartItems");
-  if (!itemsEl) return;
+/* ---- Product page (PDP): load the real product from ?id= ---- */
+(function initPDP() {
+  const pdp = document.querySelector(".pdp");
+  if (!pdp) return;
+  const id = new URLSearchParams(location.search).get("id");
+  const p = (id && PRODUCTS.find(x => String(x.id) === String(id))) || PRODUCTS.find(x => x.img) || PRODUCTS[0];
+  if (!p) return;
 
-  const FREE_SHIP = 199;
-  const layout = document.getElementById("cartLayout");
-  const empty = document.getElementById("cartEmpty");
-  const subtitle = document.getElementById("cartSubtitle");
-  const badge = document.querySelector('a[href="cart.html"] .badge');
-
-  function recalc() {
-    const rows = [...itemsEl.querySelectorAll(".cart-row")];
-    let subtotal = 0, discount = 0, total = 0, count = 0;
-
-    rows.forEach(row => {
-      const price = +row.dataset.price;
-      const old = +row.dataset.old || price;
-      const qty = Math.max(1, parseInt(row.querySelector(".qty input").value, 10) || 1);
-      subtotal += old * qty;
-      discount += (old - price) * qty;
-      total += price * qty;
-      count += qty;
-      const b = row.querySelector(".price b");
-      const s = row.querySelector(".price s");
-      if (b) b.textContent = NIS(price * qty);
-      if (s) s.textContent = old > price ? NIS(old * qty) : "";
-    });
-
-    // Empty state
-    if (rows.length === 0) {
-      if (layout) layout.style.display = "none";
-      if (empty) empty.hidden = false;
-      if (subtitle) subtitle.textContent = "אין מוצרים בעגלה";
-      if (badge) { badge.textContent = "0"; badge.style.display = "none"; }
-      return;
-    }
-    if (layout) layout.style.display = "";
-    if (empty) empty.hidden = true;
-
-    // Summary numbers
-    const setText = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val; };
-    setText("sumSubtotal", NIS(subtotal));
-    setText("sumDiscount", "−" + NIS(discount));
-    setText("sumTotal", NIS(total));
-    if (subtitle) subtitle.textContent = count + (count === 1 ? " מוצר בעגלה" : " מוצרים בעגלה") + " · כמעט סיימתם!";
-    if (badge) { badge.textContent = count; badge.style.display = ""; }
-
-    // Free-shipping bar
-    const fill = document.getElementById("shipFill");
-    const msg = document.getElementById("shipMsg");
-    const pct = Math.min(100, Math.round((total / FREE_SHIP) * 100));
-    if (fill) fill.style.width = pct + "%";
-    if (msg) {
-      msg.innerHTML = total >= FREE_SHIP
-        ? "🎉 זכאים ל<b>משלוח חינם</b> — מגיע לכם!"
-        : "🚚 הוסיפו עוד <b>" + NIS(FREE_SHIP - total) + "</b> כדי לקבל <b>משלוח חינם</b>";
-    }
+  const q = s => pdp.querySelector(s);
+  // media
+  const main = q(".gallery__main");
+  if (main) {
+    const media = p.img
+      ? `<img class="ph" src="${p.img}" alt="${p.title}" style="width:100%;height:100%;object-fit:contain;padding:12%">`
+      : `<span class="ph">${p.emoji || "📦"}</span>`;
+    const disc = (p.old && p.old > p.price) ? Math.round((1 - p.price / p.old) * 100) : 0;
+    main.innerHTML = (disc ? `<span class="card__badge card__badge--green" dir="ltr">-${disc}%</span>` : "") + media;
   }
+  const thumbs = q(".gallery__thumbs");
+  if (thumbs) thumbs.style.display = "none"; // single real image
 
-  // Remove item
-  itemsEl.addEventListener("click", e => {
-    const rm = e.target.closest("[data-remove]");
-    if (!rm) return;
-    const row = rm.closest(".cart-row");
-    row.style.transition = "opacity .2s, transform .2s";
-    row.style.opacity = "0";
-    row.style.transform = "translateX(-12px)";
-    setTimeout(() => { row.remove(); recalc(); }, 200);
+  // info
+  const cat = q(".card__cat"); if (cat) cat.textContent = p.cat;
+  const h1 = q("h1"); if (h1) h1.textContent = p.title;
+  const price = q(".pdp__price");
+  if (price) {
+    const save = (p.old && p.old > p.price) ? `<span class="save">חיסכון ${NIS(p.old - p.price)}</span>` : "";
+    price.innerHTML = `<b>${NIS(p.price)}</b>${p.old && p.old > p.price ? `<s>${NIS(p.old)}</s>` : ""}${save}`;
+  }
+  // breadcrumb + title + rating count
+  const cur = document.querySelector(".crumbs .cur"); if (cur) cur.textContent = p.title;
+  const bcat = document.querySelector(".crumbs a[href^='category']"); if (bcat) { bcat.textContent = p.cat; bcat.href = "category.html?cat=" + encodeURIComponent(p.cat); }
+  document.title = p.title + " · דיגיטל שופ digitalShop";
+
+  // add to cart (reads qty) + quick buy
+  const qtyInput = q(".pdp__buy .qty input");
+  const addBtn = document.getElementById("pdpAdd");
+  const buyBtn = document.getElementById("pdpBuy");
+  const getQty = () => Math.max(1, parseInt(qtyInput && qtyInput.value, 10) || 1);
+  if (addBtn) addBtn.addEventListener("click", () => {
+    if (window.Cart) window.Cart.add(p.id, getQty());
+    const t = addBtn.innerHTML;
+    addBtn.innerHTML = "נוסף לעגלה ✓"; addBtn.style.background = "var(--green)";
+    setTimeout(() => { addBtn.innerHTML = t; addBtn.style.background = ""; }, 1200);
+  });
+  if (buyBtn) buyBtn.addEventListener("click", e => {
+    e.preventDefault();
+    if (window.Cart) window.Cart.add(p.id, getQty());
+    location.href = "checkout.html";
   });
 
-  // Quantity change (runs after the global stepper updates the value)
-  itemsEl.addEventListener("click", e => {
-    if (e.target.closest("[data-inc],[data-dec]")) recalc();
-  });
-
-  recalc();
+  // related: same category
+  const rel = document.getElementById("related");
+  if (rel) {
+    const same = PRODUCTS.filter(x => x.cat === p.cat && String(x.id) !== String(p.id)).slice(0, 4);
+    rel.innerHTML = (same.length ? same : PRODUCTS.slice(0, 4)).map(cardHTML).join("");
+  }
 })();

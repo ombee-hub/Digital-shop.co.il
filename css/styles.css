@@ -818,3 +818,31 @@ html.a11y-invert #a11yMain img { filter: invert(1) hue-rotate(180deg); }
 .footer__credit a { display: inline-flex; align-items: center; opacity: .8; transition: opacity .15s, transform .15s; }
 .footer__credit a:hover { opacity: 1; transform: translateY(-1px); }
 .footer__credit img { height: 28px; width: auto; display: block; filter: brightness(0) invert(1); }
+
+/* =========================================================
+   Checkout
+   ========================================================= */
+.checkout-grid { display: grid; grid-template-columns: 1fr 380px; gap: 30px; align-items: start; }
+@media (max-width: 860px) { .checkout-grid { grid-template-columns: 1fr; } }
+.checkout-form { max-width: none; background: #fff; border: 1px solid var(--line); border-radius: var(--radius); padding: 26px; }
+.checkout-form h3 { font-size: 1.1rem; font-weight: 800; margin: 6px 0 14px; }
+.checkout-form h3 + h3, .checkout-form .co-sec { margin-top: 26px; padding-top: 22px; border-top: 1px solid var(--line-soft); }
+.co-item { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--line-soft); }
+.co-item__media { width: 48px; height: 48px; border-radius: 10px; background: var(--bg-soft); display: grid; place-items: center; font-size: 1.5rem; flex: none; overflow: hidden; }
+.co-item__media img { width: 100%; height: 100%; object-fit: contain; padding: 6px; }
+.co-item__info { flex: 1; min-width: 0; }
+.co-item__info b { display: block; font-size: .9rem; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.co-item__info span { font-size: .8rem; color: var(--ink-soft); }
+.co-item__price { font-weight: 800; white-space: nowrap; }
+#checkoutSummary .summary__row { padding-top: 12px; }
+#checkoutSummary .summary__row:first-of-type { margin-top: 8px; }
+
+/* Order confirmation */
+.order-done { text-align: center; max-width: 520px; margin-inline: auto; padding: 50px 20px; }
+.order-done__check { width: 86px; height: 86px; border-radius: 50%; margin: 0 auto 22px; background: var(--green); color: #fff; display: grid; place-items: center; box-shadow: 0 12px 30px rgba(24,169,87,.35); }
+.order-done__check svg { width: 44px; height: 44px; }
+.order-done h2 { font-size: 1.7rem; font-weight: 900; letter-spacing: -.02em; }
+.order-done p { color: var(--ink-soft); margin: 12px auto; }
+.order-done p b { color: var(--ink); }
+.order-done__sub { font-size: .92rem; }
+.order-done .btn { margin-top: 14px; }
