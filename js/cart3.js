@@ -3,6 +3,7 @@
    Loaded after products-data.js, before app.js.
    ========================================================= */
 (function () {
+  console.log("%c🛒 DigitalShop cart3 loaded ✓ (delete enabled)", "color:#18a957;font-weight:bold");
   const KEY = "ds_cart";
   const FREE_SHIP = 199;
   const nis = n => "₪" + Number(n || 0).toLocaleString("he-IL");
