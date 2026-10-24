@@ -15,7 +15,7 @@
   bar.setAttribute("role", "dialog");
   bar.setAttribute("aria-label", "הודעת עוגיות");
   bar.innerHTML =
-    '<p>אתר זה משתמש בעוגיות (Cookies) כדי לשפר את חוויית הגלישה שלך. ' +
+    '<p><span class="cookie-emoji">🍪</span> אתר זה משתמש בעוגיות (Cookies) כדי לשפר את חוויית הגלישה שלך. ' +
     'לפרטים נוספים ניתן לעיין ב<a href="privacy.html">מדיניות הפרטיות</a>.</p>' +
     '<div class="cookie-actions">' +
     '<button class="btn btn--primary" data-cookie="all" type="button">מאשר/ת</button>' +
