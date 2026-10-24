@@ -15,8 +15,8 @@
     '<p>אתר זה משתמש בעוגיות (Cookies) כדי לשפר את חוויית הגלישה שלך. ' +
     'לפרטים נוספים ניתן לעיין ב<a href="privacy.html">מדיניות הפרטיות</a>.</p>' +
     '<div class="cookie-actions">' +
-    '<button class="btn btn--primary" data-cookie="all" type="button">אישור הכל</button>' +
-    '<button class="btn btn--ghost" data-cookie="necessary" type="button">רק הכרחיות</button>' +
+    '<button class="btn btn--primary" data-cookie="all" type="button">מאשר/ת</button>' +
+    '<button class="btn btn--ghost" data-cookie="necessary" type="button">ביטול</button>' +
     '</div>';
   document.body.appendChild(bar);
 
