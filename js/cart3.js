@@ -73,16 +73,16 @@
         <div class="cart-row__info">
           <span class="card__cat">${p.cat}</span>
           <h3>${p.title}</h3>
-          <button type="button" class="rm" onclick="dsCartRemove('${p.id}')">
+          <button type="button" class="rm" data-remove>
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M8 6V4h8v2M6 6l1 14h10l1-14"/></svg> הסרה
           </button>
         </div>
         <div class="cart-row__end">
           <div class="price"><b>${nis(p.price * qty)}</b>${old ? `<s>${nis(old * qty)}</s>` : ""}</div>
           <div class="qty">
-            <button type="button" onclick="dsCartDec('${p.id}')" aria-label="הפחת">−</button>
-            <input type="text" value="${qty}" inputmode="numeric" aria-label="כמות" onchange="dsCartSet(this,'${p.id}')">
-            <button type="button" onclick="dsCartInc('${p.id}')" aria-label="הוסף">+</button>
+            <button type="button" data-dec aria-label="הפחת">−</button>
+            <input type="text" value="${qty}" inputmode="numeric" aria-label="כמות" data-qty>
+            <button type="button" data-inc aria-label="הוסף">+</button>
           </div>
         </div>
       </div>`;
@@ -91,17 +91,30 @@
     updateSummary();
   }
 
-  /* Global handlers used by inline onclick in the cart rows —
-     the most robust approach: no event binding, works in every browser. */
+  /* Document-level delegation (same mechanism as the working add-to-cart).
+     Bound once; works regardless of re-render, re-parenting, or CSP on inline handlers. */
   const curQty = id => { const it = read().find(x => String(x.id) === String(id)); return it ? it.qty : 1; };
-  window.dsCartRemove = function (id) {
-    const row = document.querySelector('#cartItems .cart-row[data-id="' + id + '"]');
-    if (row) { row.style.transition = "opacity .2s, transform .2s"; row.style.opacity = "0"; row.style.transform = "translateX(-12px)"; }
-    setTimeout(function () { remove(id); renderCartPage(); }, 200);
-  };
-  window.dsCartInc = function (id) { setQty(id, curQty(id) + 1); renderCartPage(); };
-  window.dsCartDec = function (id) { setQty(id, curQty(id) - 1); renderCartPage(); };
-  window.dsCartSet = function (inp, id) { setQty(id, parseInt(inp.value, 10) || 1); renderCartPage(); };
+  let bound = false;
+  function bindCartEvents() {
+    if (bound) return; bound = true;
+    document.addEventListener("click", function (e) {
+      const rowEl = e.target.closest && e.target.closest("#cartItems .cart-row");
+      if (!rowEl) return;
+      const id = rowEl.getAttribute("data-id");
+      if (e.target.closest("[data-remove]")) {
+        rowEl.style.transition = "opacity .2s, transform .2s";
+        rowEl.style.opacity = "0"; rowEl.style.transform = "translateX(-12px)";
+        setTimeout(function () { remove(id); renderCartPage(); }, 200);
+      } else if (e.target.closest("[data-inc]")) { setQty(id, curQty(id) + 1); renderCartPage(); }
+      else if (e.target.closest("[data-dec]")) { setQty(id, curQty(id) - 1); renderCartPage(); }
+    });
+    document.addEventListener("change", function (e) {
+      const inp = e.target.closest && e.target.closest("#cartItems [data-qty]");
+      if (!inp) return;
+      const id = inp.closest(".cart-row").getAttribute("data-id");
+      setQty(id, parseInt(inp.value, 10) || 1); renderCartPage();
+    });
+  }
 
   function updateSummary() {
     const t = totals();
@@ -163,6 +176,6 @@
 
   /* run (scripts are at end of body, DOM is ready) */
   updateBadges();
-  renderCartPage();
+  if (document.getElementById("cartItems")) { bindCartEvents(); renderCartPage(); }
   initCheckout();
 })();
