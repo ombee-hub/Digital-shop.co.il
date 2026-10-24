@@ -51,8 +51,16 @@ function cardHTML(p) {
       <div class="card__rating"><span class="stars">${stars(rating)}</span> ${rating.toFixed(1)} <span style="color:var(--ink-faint)">(${reviews})</span></div>
       <div class="card__foot">
         <div class="price"><b>${NIS(p.price)}</b>${p.old ? `<s>${NIS(p.old)}</s>` : ""}</div>
+      </div>
+      <div class="card__actions">
+        <div class="qty qty--card">
+          <button type="button" data-qdec aria-label="הפחת">−</button>
+          <input type="text" value="1" inputmode="numeric" data-cardqty aria-label="כמות">
+          <button type="button" data-qinc aria-label="הוסף">+</button>
+        </div>
         <button class="card__add" aria-label="הוסף לעגלה" data-add="${p.id}">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="20" r="1.6"/><circle cx="18" cy="20" r="1.6"/><path d="M2 3h2.2l2 12.5a1.5 1.5 0 0 0 1.5 1.2h9.6a1.5 1.5 0 0 0 1.5-1.2L20.5 7H6"/></svg>
+          <span class="card__add-label">הוספה</span>
         </button>
       </div>
     </div>
@@ -151,15 +159,32 @@ const CAT_EMOJI = {
   show(1, false);
 })();
 
-/* ---- Add-to-cart (cards) — adds to the real cart + feedback ---- */
+/* ---- Card quantity stepper (+/−) ---- */
+document.addEventListener("click", e => {
+  const qinc = e.target.closest("[data-qinc]");
+  const qdec = e.target.closest("[data-qdec]");
+  if (qinc || qdec) {
+    const input = (qinc || qdec).closest(".qty").querySelector("[data-cardqty]");
+    if (input) {
+      let v = parseInt(input.value, 10) || 1;
+      v = qinc ? v + 1 : Math.max(1, v - 1);
+      input.value = v;
+    }
+  }
+});
+
+/* ---- Add-to-cart (cards) — adds the chosen quantity + feedback ---- */
 document.addEventListener("click", e => {
   const add = e.target.closest("[data-add]");
   if (add) {
-    if (window.Cart) window.Cart.add(add.dataset.add, 1);
+    const input = add.closest(".card") && add.closest(".card").querySelector("[data-cardqty]");
+    const qty = input ? Math.max(1, parseInt(input.value, 10) || 1) : 1;
+    if (window.Cart) window.Cart.add(add.dataset.add, qty);
     const original = add.innerHTML;
-    add.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6 9 17l-5-5"/></svg>';
+    add.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6 9 17l-5-5"/></svg> נוסף';
     add.style.background = "var(--green)";
     add.style.color = "#fff";
+    if (input) input.value = 1;
     setTimeout(() => {
       add.innerHTML = original;
       add.style.background = ""; add.style.color = "";

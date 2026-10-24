@@ -846,3 +846,21 @@ html.a11y-invert #a11yMain img { filter: invert(1) hue-rotate(180deg); }
 .order-done p b { color: var(--ink); }
 .order-done__sub { font-size: .92rem; }
 .order-done .btn { margin-top: 14px; }
+
+/* ---------- Product card: quantity + add row ---------- */
+.card__actions { display: flex; align-items: stretch; gap: 8px; padding: 0 16px 16px; margin-top: 10px; }
+.qty--card { flex: none; border-radius: 10px; }
+.qty--card button { width: 30px; height: 40px; font-size: 1.15rem; }
+.qty--card input { width: 30px; height: 40px; font-size: .9rem; font-weight: 700; }
+.card__actions .card__add {
+  flex: 1; width: auto; height: 40px; border-radius: 10px;
+  display: inline-flex; align-items: center; justify-content: center; gap: 7px;
+  font-size: .92rem; font-weight: 700;
+}
+.card__actions .card__add svg { width: 19px; height: 19px; }
+.card__actions .card__add:hover { transform: none; background: var(--brand); color: #fff; }
+@media (max-width: 620px) {
+  .card__add-label { display: none; }
+  .card__actions { padding: 0 12px 12px; }
+  .qty--card button, .qty--card input { width: 26px; height: 38px; }
+}
