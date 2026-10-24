@@ -89,23 +89,34 @@
     }).join("");
 
     updateSummary();
+  }
 
-    itemsEl.onclick = e => {
-      const row = e.target.closest(".cart-row"); if (!row) return;
-      const id = row.dataset.id;
-      const cur = () => { const it = read().find(x => String(x.id) === id); return it ? it.qty : 1; };
-      if (e.target.closest("[data-remove]")) {
+  /* Robust, once-bound delegation on the document — survives re-render,
+     re-parenting (a11y wrap) and any element.onclick quirks. */
+  let eventsBound = false;
+  function bindCartEvents() {
+    if (eventsBound) return;
+    eventsBound = true;
+    const curQty = id => { const it = read().find(x => String(x.id) === String(id)); return it ? it.qty : 1; };
+    document.addEventListener("click", e => {
+      const rm = e.target.closest("#cartItems [data-remove]");
+      if (rm) {
+        e.preventDefault();
+        const row = rm.closest(".cart-row"); const id = row.dataset.id;
         row.style.transition = "opacity .2s, transform .2s";
         row.style.opacity = "0"; row.style.transform = "translateX(-12px)";
         setTimeout(() => { remove(id); renderCartPage(); }, 200);
-      } else if (e.target.closest("[data-inc]")) { setQty(id, cur() + 1); renderCartPage(); }
-      else if (e.target.closest("[data-dec]")) { setQty(id, cur() - 1); renderCartPage(); }
-    };
-    itemsEl.onchange = e => {
-      const inp = e.target.closest(".qty input"); if (!inp) return;
-      setQty(e.target.closest(".cart-row").dataset.id, parseInt(inp.value, 10) || 1);
-      renderCartPage();
-    };
+        return;
+      }
+      const inc = e.target.closest("#cartItems [data-inc]");
+      if (inc) { const id = inc.closest(".cart-row").dataset.id; setQty(id, curQty(id) + 1); renderCartPage(); return; }
+      const dec = e.target.closest("#cartItems [data-dec]");
+      if (dec) { const id = dec.closest(".cart-row").dataset.id; setQty(id, curQty(id) - 1); renderCartPage(); return; }
+    });
+    document.addEventListener("change", e => {
+      const inp = e.target.closest("#cartItems .qty input");
+      if (inp) { const id = inp.closest(".cart-row").dataset.id; setQty(id, parseInt(inp.value, 10) || 1); renderCartPage(); }
+    });
   }
 
   function updateSummary() {
@@ -168,6 +179,6 @@
 
   /* run (scripts are at end of body, DOM is ready) */
   updateBadges();
-  renderCartPage();
+  if (document.getElementById("cartItems")) { bindCartEvents(); renderCartPage(); }
   initCheckout();
 })();
