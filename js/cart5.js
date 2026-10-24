@@ -3,7 +3,7 @@
    Loaded after products-data.js, before app.js.
    ========================================================= */
 (function () {
-  console.log("%c🛒 DigitalShop cart4 loaded (minus removes at qty 1) ✓ (delete enabled)", "color:#18a957;font-weight:bold");
+  console.log("%c🛒 DigitalShop cart5 loaded ✓ (delete enabled)", "color:#18a957;font-weight:bold");
   const KEY = "ds_cart";
   const FREE_SHIP = 199;
   const nis = n => "₪" + Number(n || 0).toLocaleString("he-IL");
@@ -74,15 +74,14 @@
         <div class="cart-row__info">
           <span class="card__cat">${p.cat}</span>
           <h3>${p.title}</h3>
-          <button type="button" class="rm" data-remove>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M8 6V4h8v2M6 6l1 14h10l1-14"/></svg> הסרה
-          </button>
         </div>
         <div class="cart-row__end">
           <div class="price"><b>${nis(p.price * qty)}</b>${old ? `<s>${nis(old * qty)}</s>` : ""}</div>
           <div class="qty">
-            <button type="button" data-dec aria-label="הפחת">−</button>
-            <input type="text" value="${qty}" inputmode="numeric" aria-label="כמות" data-qty>
+            <button type="button" class="qty__trash" data-remove aria-label="הסר מהעגלה">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M8 6V4h8v2M6 6l1 14h10l1-14M10 11v6M14 11v6"/></svg>
+            </button>
+            <input type="text" value="${qty}" inputmode="numeric" aria-label="כמות" data-qty readonly>
             <button type="button" data-inc aria-label="הוסף">+</button>
           </div>
         </div>

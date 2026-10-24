@@ -54,9 +54,7 @@ function cardHTML(p) {
       </div>
       <div class="card__actions">
         <div class="qty qty--card">
-          <button type="button" class="qty__trash" data-qclear aria-label="נקה כמות">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M8 6V4h8v2M6 6l1 14h10l1-14M10 11v6M14 11v6"/></svg>
-          </button>
+          <button type="button" data-qdec aria-label="הפחת">−</button>
           <input type="text" value="0" inputmode="numeric" data-cardqty aria-label="כמות" readonly>
           <button type="button" data-qinc aria-label="הוסף יחידה">+</button>
         </div>
@@ -164,12 +162,12 @@ const CAT_EMOJI = {
 /* ---- Card quantity: + goes up to 100, trash clears to 0 ---- */
 document.addEventListener("click", e => {
   const qinc = e.target.closest("[data-qinc]");
-  const qclear = e.target.closest("[data-qclear]");
-  if (qinc || qclear) {
-    const input = (qinc || qclear).closest(".qty").querySelector("[data-cardqty]");
+  const qdec = e.target.closest("[data-qdec]");
+  if (qinc || qdec) {
+    const input = (qinc || qdec).closest(".qty").querySelector("[data-cardqty]");
     if (input) {
       let v = parseInt(input.value, 10) || 0;
-      v = qinc ? Math.min(100, v + 1) : 0;
+      v = qinc ? Math.min(100, v + 1) : Math.max(0, v - 1);
       input.value = v;
     }
   }

@@ -866,7 +866,7 @@ html.a11y-invert #a11yMain img { filter: invert(1) hue-rotate(180deg); }
 }
 
 /* Card quantity: red trash (clear) button */
-.qty--card .qty__trash { color: #e03131; display: grid; place-items: center; }
-.qty--card .qty__trash:hover { background: #ffecec; color: #c92a2a; }
-.qty--card .qty__trash svg { width: 16px; height: 16px; }
+.qty__trash { color: #e03131; display: grid; place-items: center; }
+.qty__trash:hover { background: #ffecec; color: #c92a2a; }
+.qty__trash svg { width: 16px; height: 16px; }
 .qty--card input[readonly] { cursor: default; background: #fff; }
