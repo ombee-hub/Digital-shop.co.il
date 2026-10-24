@@ -3,7 +3,7 @@
    Loaded after products-data.js, before app.js.
    ========================================================= */
 (function () {
-  console.log("%c🛒 DigitalShop cart3 loaded ✓ (delete enabled)", "color:#18a957;font-weight:bold");
+  console.log("%c🛒 DigitalShop cart4 loaded (minus removes at qty 1) ✓ (delete enabled)", "color:#18a957;font-weight:bold");
   const KEY = "ds_cart";
   const FREE_SHIP = 199;
   const nis = n => "₪" + Number(n || 0).toLocaleString("he-IL");
@@ -98,16 +98,23 @@
   let bound = false;
   function bindCartEvents() {
     if (bound) return; bound = true;
+    const removeRow = (rowEl, id) => {
+      rowEl.style.transition = "opacity .2s, transform .2s";
+      rowEl.style.opacity = "0"; rowEl.style.transform = "translateX(-12px)";
+      setTimeout(function () { remove(id); renderCartPage(); }, 200);
+    };
     document.addEventListener("click", function (e) {
       const rowEl = e.target.closest && e.target.closest("#cartItems .cart-row");
       if (!rowEl) return;
       const id = rowEl.getAttribute("data-id");
       if (e.target.closest("[data-remove]")) {
-        rowEl.style.transition = "opacity .2s, transform .2s";
-        rowEl.style.opacity = "0"; rowEl.style.transform = "translateX(-12px)";
-        setTimeout(function () { remove(id); renderCartPage(); }, 200);
+        removeRow(rowEl, id);
       } else if (e.target.closest("[data-inc]")) { setQty(id, curQty(id) + 1); renderCartPage(); }
-      else if (e.target.closest("[data-dec]")) { setQty(id, curQty(id) - 1); renderCartPage(); }
+      else if (e.target.closest("[data-dec]")) {
+        // minus at quantity 1 removes the item from the cart
+        if (curQty(id) <= 1) { removeRow(rowEl, id); }
+        else { setQty(id, curQty(id) - 1); renderCartPage(); }
+      }
     });
     document.addEventListener("change", function (e) {
       const inp = e.target.closest && e.target.closest("#cartItems [data-qty]");
