@@ -84,7 +84,7 @@
     <button class="a11y-close" aria-label="סגירה">${ico('<path d="M18 6 6 18M6 6l12 12"/>')}</button>
     <h2>תפריט נגישות</h2>
     <div class="a11y-grid">
-      <button class="a11y-item" data-type="text" data-id="text">
+      <button class="a11y-item a11y-item--wide" data-type="text" data-id="text">
         <span class="a11y-ic"><svg viewBox="0 0 24 24"><text x="2" y="18" font-size="15" font-weight="800" fill="currentColor">A</text><text x="11" y="18" font-size="11" font-weight="800" fill="currentColor">A</text></svg></span>
         <span>הגדלת טקסט</span><span class="lvl" data-lvl></span>
       </button>
