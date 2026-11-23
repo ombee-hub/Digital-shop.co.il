@@ -29,6 +29,7 @@
     { id: "noimg",      label: "הסתרת תמונות",  icon: ico('<rect x="3" y="3" width="18" height="18" rx="2"/><path d="m3 3 18 18"/><circle cx="9" cy="9" r="1.5"/>') },
     { id: "cursor",     label: "סמן גדול",      icon: ico('<path d="M5 3l13 6.5-5.5 1.8L10 17z"/>') },
     { id: "align",      label: "יישור לאמצע",   icon: ico('<path d="M3 6h18M7 12h10M5 18h14"/>') },
+    { id: "readline",   label: "קו קריאה",      icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="2" y="10.5" width="20" height="3" rx="1.5" fill="currentColor" stroke="none"/><path d="M5 6h14M7 18h10" opacity=".45"/></svg>' },
   ];
   const MODES = [
     { id: "contrast",  label: "ניגודיות גבוהה", icon: ico('<circle cx="12" cy="12" r="9"/><path d="M12 3a9 9 0 0 1 0 18z" fill="currentColor"/>') },
@@ -36,12 +37,33 @@
     { id: "grayscale", label: "גווני אפור",     icon: ico('<path d="M12 3s6 5.5 6 10a6 6 0 0 1-12 0c0-4.5 6-10 6-10z"/>') },
   ];
 
+  // Reading guide line that follows the cursor
+  function moveReadLine(e) {
+    const l = document.getElementById("a11yReadLine");
+    if (l) l.style.top = (e.clientY - 17) + "px";
+  }
+  function readingLine(on) {
+    let l = document.getElementById("a11yReadLine");
+    if (on) {
+      if (!l) {
+        l = document.createElement("div");
+        l.id = "a11yReadLine";
+        document.body.appendChild(l);
+        document.addEventListener("mousemove", moveReadLine);
+      }
+    } else if (l) {
+      l.remove();
+      document.removeEventListener("mousemove", moveReadLine);
+    }
+  }
+
   function apply() {
     TOGGLES.forEach(t => HTML.classList.toggle("a11y-" + t.id, !!state[t.id]));
     HTML.classList.remove("a11y-text1", "a11y-text2", "a11y-text3");
     if (state.text) HTML.classList.add("a11y-text" + state.text);
     HTML.classList.remove("a11y-contrast", "a11y-invert", "a11y-grayscale");
     if (state.color) HTML.classList.add("a11y-" + state.color);
+    readingLine(!!state.readline);
     try { localStorage.setItem(STORE, JSON.stringify(state)); } catch (e) {}
     refresh();
   }

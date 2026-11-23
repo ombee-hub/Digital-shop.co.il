@@ -878,3 +878,18 @@ html.a11y-invert #a11yMain img { filter: invert(1) hue-rotate(180deg); }
 .cart-row__del svg { width: 19px; height: 19px; }
 
 .cookie-emoji { font-size: 1.3rem; vertical-align: -3px; }
+
+/* Accessibility: reading guide line (follows the cursor) */
+#a11yReadLine {
+  position: fixed; inset-inline: 0; top: 0; height: 34px; z-index: 470;
+  pointer-events: none;
+  background: rgba(47, 91, 255, .10);
+  border-top: 2px solid rgba(47, 91, 255, .55);
+  border-bottom: 2px solid rgba(47, 91, 255, .55);
+}
+
+/* Legal page: in-page table of contents */
+.doc-toc { background: var(--bg-soft); border: 1px solid var(--line); border-radius: 14px; padding: 14px 18px; margin: 18px 0 26px; display: flex; flex-wrap: wrap; gap: 8px 16px; align-items: center; font-size: .9rem; }
+.doc-toc b { color: var(--ink); font-weight: 800; }
+.doc-toc a { color: var(--brand); font-weight: 600; }
+.doc-toc a:hover { text-decoration: underline; }
