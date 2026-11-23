@@ -17,7 +17,7 @@
   try { state = JSON.parse(localStorage.getItem(STORE) || "{}"); } catch (e) { state = {}; }
 
   const S = (inner) => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${inner}</svg>`;
-  const PERSON = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><circle cx="12" cy="3.6" r="2.3"/><path d="M12 6.6c-3.2 0-5.4.5-5.4 1.7 0 .9 1.5 1.2 3.5 1.4l-.5 3.2-1.3 5.6a1.05 1.05 0 0 0 2 .6L12 15.2l1.7 3.9a1.05 1.05 0 0 0 2-.6l-1.3-5.6-.5-3.2c2-.2 3.5-.5 3.5-1.4 0-1.2-2.2-1.7-5.4-1.7z"/></svg>';
+  const PERSON = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2zm9 7h-6v13h-2v-6h-2v6H9V9H3V7h18v2z"/></svg>';
 
   // type: "toggle" (on/off) | "cycle" (0..max)
   const FEATURES = [
